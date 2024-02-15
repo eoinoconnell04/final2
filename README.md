@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this project, I followed directions from https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/ to create a web service where you can upload images and files into a server. This project uses Flask, Docker, Postgres, Gunicorn, Nginx, in order to create server that is based on Instagram's tech stack. To access the server, I use portforwarding to connect the web service from the lambda server to firefox, where I can access it at the url http://localhost:8080/upload. Once the file has been uploaded, you can view the file at the url http://localhost:8080/media/file_name, where file_name is the name of the file that you uploaded. Note, this site can only be accessed on the same machine that has the lambda server and portforwarding setup.
+In this project, I followed directions from https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/ to create a web service where you can upload images and files into a server. This project uses Flask, Docker, Postgres, Gunicorn, Nginx, in order to create server that is based on Instagram's tech stack. To access the server, I use portforwarding to connect the web service from the lambda server to firefox, where I can access it at the url http://localhost:8080/upload. Once the file has been uploaded, you can view the file at the url http://localhost:8080/media/file_name, where file_name is the name of the file that you uploaded. Note, this site can only be accessed on the same machine that has the portforwarding setup.
 
 Here is an example of uploading an image on the website, and then accessing it within firefox.
 <img src=uploading_image.gif />
