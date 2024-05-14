@@ -141,22 +141,37 @@ def search():
         offset = (page_num - 1) * 20
 
         sql = sqlalchemy.sql.text("""
-    SELECT id_tweets,
-    ts_headline('english', text, plainto_tsquery(:query), 'StartSel=<span> StopSel=</span>') AS highlighted_text,
-    created_at,
-    id_users
-    FROM tweets
-    WHERE to_tsvector('english', text) @@ plainto_tsquery(:query)
-    ORDER BY created_at DESC
-    LIMIT 20 OFFSET :offset;
-""")
+            SELECT id_tweets,
+            ts_headline('english', text, plainto_tsquery(:query), 'StartSel=<span> StopSel=</span>') AS highlighted_text,
+            time,
+            id_users
+            FROM tweets
+            WHERE to_tsvector('english', text) @@ plainto_tsquery(:query)
+            ORDER BY time DESC
+            LIMIT 20 OFFSET :offset;
+        """)
+
+        result = connection.execute(sql, {'query': ' & '.join(search.split()), 'offset': offset})
+        
+        
 
         rows = result.fetchall()
 
+        # find corresponding usernames then append all information to messages
         messages = []
         for row in rows:
+            sql = sqlalchemy.sql.text("""
+                SELECT username
+                FROM tweets
+                JOIN users USING(id_users)
+                WHERE id_tweets=:id ;
+            """)
+            result = connection.execute(sql, {'id': row[0]})
+
+            users = result.fetchone()
+
             messages.append({
-                'username': row[0],
+                'username': users[0][0],
                 'text': row[1],
                 'time': row[2],
             })
@@ -171,7 +186,13 @@ def search():
 
 #helper functions:
 def check_creds(username, password):
-    
+   
+    if not username or not password:
+        return False
+
+    if username is None or password is None:
+        return False
+
     sql = sqlalchemy.sql.text('''
         SELECT * FROM users
         WHERE username = :username
