@@ -1,3 +1,6 @@
+
+[![](https://github.com/eoinoconnell04/final2/workflows/tests/badge.svg)](https://github.com/eoinoconnell04/final2/actions?query=workflow%3Atests)
+
 # Instagram Text Stack
 
 ## Overview
