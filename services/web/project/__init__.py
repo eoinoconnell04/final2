@@ -33,13 +33,17 @@ def root():
     password = request.cookies.get('password')
     good_creds = check_creds(username,password)
 
+    page_num = int(request.args.get('page', 1))
+    offset = (page_num - 1) * 20
+
+
     result = connection.execute(text(
         "SELECT u.username, t.text, t.time "
         "FROM tweets AS t "
         "JOIN users AS u using(id_users) "
         "ORDER BY t.time DESC "
-        "LIMIT :num;"
-    ), {"num": 20})
+        "LIMIT :num OFFSET :off;"
+        ), {"num": 20, "off": offset})
 
     rows = result.fetchall()
 
@@ -52,7 +56,7 @@ def root():
         })
 
     
-    return render_template('root.html', logged_in=good_creds, messages=messages)
+    return render_template('root.html', logged_in=good_creds, messages=messages, page_num=page_num)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -123,7 +127,7 @@ def create_message():
 
     return render_template('create_message.html',logged_in=good_creds, message_inserted=False)
 
-@app.route('/search')
+@app.route('/search', methods=['GET','POST'])
 def search():
 
     username = request.cookies.get('username')
@@ -131,8 +135,37 @@ def search():
     good_creds = check_creds(username,password)
 
     search = request.form.get('search')
+    if search:
 
-    return render_template('search.html',logged_in=good_creds)
+        page_num = int(request.args.get('page', 1))
+        offset = (page_num - 1) * 20
+
+        sql = sqlalchemy.sql.text("""
+    SELECT id_tweets,
+    ts_headline('english', text, plainto_tsquery(:query), 'StartSel=<span> StopSel=</span>') AS highlighted_text,
+    created_at,
+    id_users
+    FROM tweets
+    WHERE to_tsvector('english', text) @@ plainto_tsquery(:query)
+    ORDER BY created_at DESC
+    LIMIT 20 OFFSET :offset;
+""")
+
+        rows = result.fetchall()
+
+        messages = []
+        for row in rows:
+            messages.append({
+                'username': row[0],
+                'text': row[1],
+                'time': row[2],
+            })
+
+
+
+        return render_template('search.html',logged_in=good_creds, messages=messages, page_num=page_num, display=True)
+
+    return render_template('search.html',logged_in=good_creds, page_num=1, display=False)
 
 
 

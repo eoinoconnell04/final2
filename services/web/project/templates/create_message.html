@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% if message_inserted %}
+<p>Tweet posted succesfully.</p>
+{% endif %}
+
 <form action="/create_message" method="POST">
     <table>
         <tr>

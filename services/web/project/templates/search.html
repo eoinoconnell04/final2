@@ -16,4 +16,26 @@
 			<td><input type=submit value='search'></td>
 		</tr>
 	</table>
+<form>
+
+{% if display %}
+
+{% for message in messages %}
+    <p>From user {{ message.username }}: {{ message.text }} (Created at: {{ message.time }})</p>
+{% endfor %}
+
+{% if page_num > 1 %}
+        <a href="?page={{ page_num - 1 }}" class="submit">Previous Page</a>
+{% endif %}
+
+{% if messages|length < 20 %}
+<p>Last Page</p>
+{% else %}
+        <a href="?page={{ page_num + 1 }}" class="submit">Next Page</a>
+{% endif %}
+
+<p>Page {{ page_num }}</p>
+
+{% endif %}
+
 {% endblock %}
