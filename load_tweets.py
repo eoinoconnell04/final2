@@ -148,7 +148,7 @@ if __name__ == '__main__':
     connection = engine.connect()
 
     # inserts random users
-    for i in range(1000):
+    for i in range(1000000):
 
         # load and insert the user 
         username = gen_user()
@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
 
     # inserts random urls
-    for i in range(3000):
+    for i in range(10000000):
 
         # load and insert the url 
         url = gen_url()
@@ -189,7 +189,7 @@ if __name__ == '__main__':
     res = connection.execute(sql)
     urls = [url[0] for url in res.fetchall()]
     
-    for i in range(500):     
+    for i in range(1200000):     
         
         user = random.choice(users)
         

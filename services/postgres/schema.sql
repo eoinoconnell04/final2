@@ -25,4 +25,9 @@ CREATE TABLE tweets (
 	time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Indexes:
+create index get_id_users on users(username, id_users);  -- speds up geting id_users from username
+create index creds on users(username, password); -- speeds up checking credentials
+create index rum_ind on tweets using rum(to_tsvector('english', text));
+
 COMMIT;

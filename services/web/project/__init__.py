@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 import sqlalchemy
 from sqlalchemy import text, create_engine
 import psycopg2
+import datetime
 
 
 app = Flask(__name__)
@@ -212,7 +213,7 @@ def check_creds(username, password):
 
 def check_taken(username):
     sql = sqlalchemy.sql.text('''
-        SELECT * FROM users
+        SELECT username FROM users
         WHERE username = :username;
         ''')
 
@@ -246,14 +247,18 @@ def insert_tweet(text, username):
     result_id_urls = connection.execute(sql)
     id_urls = result_id_urls.fetchone()[0]  # Fetch the result and extract the value
 
+    time = str(datetime.datetime.now()).split('.')[0] + '.' + str(datetime.datetime.now()).split('.')[1]
+
+
     sql = sqlalchemy.sql.text(
             '''
-            INSERT INTO tweets (text, id_users, id_urls) 
-            VALUES (:text, :id_users, :id_urls)
+            INSERT INTO tweets (text, id_users, id_urls, time) 
+            VALUES (:text, :id_users, :id_urls, :time)
             ''')
 
     sql = sql.bindparams(text=text,
         id_users=id_users,
-        id_urls=id_urls)
+        id_urls=id_urls,
+        time=time)
     connection.execute(sql)
 
