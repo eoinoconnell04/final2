@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Home</h2>
+<p>Please enter a word or phrase and press search.</p>
+
+<form action='/search' method="POST">
+	<table>
+		<tr>
+			<td>search</td>
+		</tr>
+		<td>
+			<input type=text name=search>
+		<tr>
+			<td></td>
+			<td><input type=submit value='search'></td>
+		</tr>
+	</table>
+{% endblock %}

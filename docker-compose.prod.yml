@@ -14,13 +14,18 @@ services:
     env_file:
       - ./.env.prod
     depends_on:
-      - db
-  db:
-    image: postgres:13
+      - postgres 
+  postgres:
+    build: services/postgres 
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
-    env_file:
-      - ./.env.prod.db
+      - ./:/tmp/db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+      - PGUSER=postgres
+    ports:
+      - 28922:5432 
   nginx:
     build: ./services/nginx
     volumes:
@@ -33,5 +38,6 @@ services:
 
 volumes:
   postgres_data_prod:
+  postgres_prod:
   static_volume:
   media_volume:

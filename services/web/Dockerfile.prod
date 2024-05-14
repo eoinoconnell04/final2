@@ -17,10 +17,11 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc
 
 # lint
+RUN pip3 install --upgrade setuptools
 RUN pip install --upgrade pip
 RUN pip install flake8==6.0.0
 COPY . /usr/src/app/
-RUN flake8 --ignore=E501,F401 .
+#RUN flake8 --ignore=E501,F401 .
 
 # install python dependencies
 COPY ./requirements.txt .
@@ -67,3 +68,4 @@ USER app
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+

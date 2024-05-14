@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>Please enter your new username and password. Your two passwords must match.</p>
+
+{% if mismatch %}
+<p>Passwords must match, try again.</p>
+{% endif %}
+
+{% if taken %}
+<p>Username taken.</p>
+{% endif %}
+
+{% if done %}
+<p>Account Created.</p>
+{% endif %}
+
+{% if empty %}
+<p>Empty</p>
+{% endif %}
+
+<form action='/create_account' method="POST">
+        <table>
+                <tr>
+                <td>
+                        username
+                </td>
+                <td>
+                        <input type=text name=username>
+                </td>
+                </tr>
+                <tr>
+                <td>
+                        password
+                </td>
+                <td>
+                        <input type=password name=password>
+                </td>
+                </tr>
+		<tr>
+                <td>
+                        reenter password
+                </td>
+                <td>
+                        <input type=password name=password2>
+                </td>
+                </tr>
+		<tr>
+                        <td></td>
+                        <td><input type=submit value='enter'></td>
+                </tr>
+        </table>
+</form>
+{% endblock %}
