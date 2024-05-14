@@ -33,8 +33,26 @@ def root():
     password = request.cookies.get('password')
     good_creds = check_creds(username,password)
 
+    result = connection.execute(text(
+        "SELECT u.username, t.text, t.time "
+        "FROM tweets AS t "
+        "JOIN users AS u using(id_users) "
+        "ORDER BY t.time DESC "
+        "LIMIT :num;"
+    ), {"num": 20})
 
-    return render_template('root.html', logged_in=good_creds)
+    rows = result.fetchall()
+
+    messages = []
+    for row in rows:
+        messages.append({
+            'username': row[0],
+            'text': row[1],
+            'time': row[2],
+        })
+
+    
+    return render_template('root.html', logged_in=good_creds, messages=messages)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -184,3 +202,4 @@ def insert_tweet(text, username):
         id_users=id_users,
         id_urls=id_urls)
     connection.execute(sql)
+

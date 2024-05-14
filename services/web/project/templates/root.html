@@ -3,4 +3,10 @@
 {% block content %}
 <h2>Home</h2>
 <p>Welcome to Eoin's Twitter Clone.</p>
+
+{% for message in messages %}
+    <p>From user {{ message.username }}: {{ message.text }} (Created at: {{ message.time }})</p>
+{% endfor %}
+
+
 {% endblock %}
